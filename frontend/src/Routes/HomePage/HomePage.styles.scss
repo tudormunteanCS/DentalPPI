@@ -1,0 +1,190 @@
+.HomePage{
+    // background-color: red;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    grid-gap: 20px;
+    width: 90%;
+    height: 90%;
+
+    //for logo
+    position: relative;
+    
+    // justify-content: center;
+    // align-items: center;
+    // align-content: center;
+    // padding: 50px;
+
+    .processed-image-container {
+        grid-column: 4 / span 6; // Place it in a specific grid location
+        grid-row: 3 / span 2;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        img {
+            width: 50vw; // Set the image width
+            height: auto; // Maintain aspect ratio
+            border-radius: 10px; // Slightly round the corners
+        }
+    }
+
+
+    .delete{
+        display: none;
+    }
+
+    .logo{
+        position: absolute;
+        top:-20px;
+        right:-20px;
+        width: 130px;
+        height: auto;
+    }
+
+    .upload{
+        grid-row: 3 / span 2;
+        grid-column: 6 / span 2;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        transition: all 0.4s;
+
+        cursor: pointer;
+        // img{
+        //     width: 60%;
+        // }
+
+        .icon{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 10%;
+            img{
+                width: 50%;
+                transition: all 0.3s;
+            }
+            img:first-child{
+                margin-bottom: 10px;
+                // display: none;
+            }
+
+            
+        }
+        
+        .button{
+            color: #3d5a80;
+            border: none;
+            border-radius: 10px;
+            margin-top: 20px;
+            padding: 0px 20px;
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.4s;
+            
+        }
+
+        &:hover{
+            background-color: #3d5a80;
+        }
+        &:hover .button{
+            color: white;
+            font-size: 25px;
+            margin-top: 7px;
+        }
+
+        &:hover .icon img:first-child{
+            transform: translate(0px, 20px);
+        }
+
+
+        
+
+       
+    }
+
+    input{
+        display: none;
+    }
+
+    .dental_image{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        h2{
+            font-family: "Inter", sans-serif;
+            font-size: 15px;
+            align-self: start;
+            margin-left: 20px;
+            margin-bottom: 20px;
+        }
+
+        img{
+            height: 150px;
+            margin-bottom: 20px;
+        }
+
+        grid-column: 3 / span 3;
+        &.top{
+            grid-row: 2 / span 2;       
+        }
+        &.bottom{
+            grid-row: 4 / span 2; 
+        }
+    }
+
+    .informations{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        h2{
+            font-family: "Inter", sans-serif;
+            font-size: 15px;
+            align-self: start;
+            margin-left: 20px;
+            margin-bottom: 20px;
+        }
+
+        table{
+            width: 80%;
+            border-collapse: collapse;
+            border-spacing: 0;
+            margin-bottom: 20px;
+            tr{
+                border-bottom: 1px solid #ECECEA;
+                th{
+                    // padding: 10px;
+                    font-family: "Inter", sans-serif;
+                    font-size: 15px;
+                    color: #3d5a80;
+                    text-align: left;
+                }
+                td{
+                    padding: 10px;
+                    padding-left: 0px;
+                    font-family: "Inter", sans-serif;
+                    font-size: 15px;
+                    color: #293241;
+                    
+                }
+            }
+        }
+
+        grid-column: 6 / span 5;
+        &.top{
+            grid-row: 2 / span 2;         
+        }
+        &.bottom{
+            grid-row: 4 / span 2;
+        }
+    }
+  
+}

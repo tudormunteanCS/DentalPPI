@@ -1,0 +1,47 @@
+.Navigation{
+    background-color: #FDFCFA;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 10vw;
+    border-right: 1px solid #ECECEA;
+    .logo{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 10%;
+        border-bottom: 1px solid #ECECEA;
+        h1{
+            font-family: "Teko", sans-serif;
+            font-size: 35px;
+            color: #3d5a80;
+        }   
+    }
+    .menu{
+        height: 80%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;    
+
+        .section{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 7%;
+            // border-bottom: 1px solid #ECECEA;
+            cursor: pointer;
+            &:hover{
+                background-color: #ECECEA;
+            }
+            img{
+                height: 30px;
+                margin-right: 10px;
+            }
+            h3{
+                font-family: "Inter", sans-serif;
+                // color: #3d5a80;
+                color: #293241;
+            }
+        }
+    }
+}
