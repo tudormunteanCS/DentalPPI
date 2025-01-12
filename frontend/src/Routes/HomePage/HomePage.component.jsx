@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 
 import { uploadFile } from "../../ApiCalls/DentureCalls";
 
@@ -11,26 +11,63 @@ import logo from "../../Assets/logo.png";
 
 import "./HomePage.styles.scss";
 import "../../Utils/general.scss";
+import { useFilesystem } from "../../useFilesystem.jsx";
+import { usePreferences } from "../../usePreferences.jsx";
+import { getHistory } from "../../ApiCalls/DentureCalls";
 
-const HomePage = () => {
-    const [fileUpload, setFileUpload] = useState(false);
+const PHOTOS = 'photos';
+
+const HomePage = ({fileUpload, setFileUpload, historyDisplayed, setHistoryDisplayed}) => {
     const [encodedImage,setEncodedImage] = useState(null)
-
+    const [photos, setPhotos] = useState([]);
+    const [images,setImages] = useState([])
+    const [loading,setLoading] = useState(false)
+    const {writeFile} = useFilesystem()
+    
     const handleUpload = async (e) => {
+        console.log("sending file to sv")
         const file = e.target.files[0];
         console.log(file);
         const response = await uploadFile(file);
         setEncodedImage(response.image)
         setFileUpload(true);
+        const filePath = new Date().getTime() + `YOLO_${file.name}`;
+        await writeFile(filePath,response.image)
+        const webviewPath = `data:image/jpeg;base64,${response.image}`
+        const newPhoto = { filePath, webviewPath };
+        
+        const newPhotos = [newPhoto, ...photos];
+        console.log(newPhotos)
+        setPhotos(newPhotos);
     };
 
+    const fetchImages = async () =>{
+        try{
+            setLoading(true)
+            const response = await getHistory()
+            setImages(response.files)
+        }
+        catch(error){
+            console.log("Error: " + error)
+        }
+        finally{
+            setLoading(false)
+        }
+    }
+
+    useEffect(()=>{
+        if(historyDisplayed){
+            fetchImages()
+        }
+    },[historyDisplayed])
+    
+ 
     return (
         <div className="HomePage">
             <img src={logo} className="logo"></img>
 
             <label className={fileUpload ? "delete":"card upload"} for="file-upload">
                 
-                {/* <img src={dentureImage} alt="denture" /> */}
                 <div className="icon">
                     <img src={dentureIconTop} alt="denture" />
                     <img src={dentureIconBottom} alt="denture" />
@@ -40,13 +77,30 @@ const HomePage = () => {
                 </div>
                 <input type="file" id="file-upload" name="file" onChange={handleUpload}/>
             </label>
-            {fileUpload &&
-
+            {console.log("history: " + historyDisplayed)}
+            {console.log("fileUpload: " + fileUpload)}
+            {fileUpload && !historyDisplayed &&
             <div className="processed-image-container">
                 <img src={`data:image/jpeg;base64,${encodedImage}`} alt="Processed" />
             </div>
-            
-            // <Fragment>
+            }
+            {historyDisplayed && !loading &&
+            <div className="images-container">
+                {images.map((imageData, index) => (
+                <div key={index} className="image-item">
+                    <p>Name of file: {imageData.filename}</p>
+                    <img src={`data:image/jpeg;base64,${imageData.image}`} alt={imageData.filename} />
+                </div>
+                ))}
+            </div>
+            }          
+        </div>
+    )
+}
+
+export default HomePage;
+
+// <Fragment>
             // <div className="card dental_image top">
             //     <h2>Summary Top</h2>
             //     <div className="summary-content">
@@ -90,12 +144,3 @@ const HomePage = () => {
             //     </table>
             // </div>
             // </Fragment>
-
-            }
-            
-
-        </div>
-    )
-}
-
-export default HomePage;

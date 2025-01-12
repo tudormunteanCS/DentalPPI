@@ -37,7 +37,7 @@ def uploadFileRoute():
         model = YOLO(model_path)
 
 
-        
+
         colors = {
             "low": (0, 255, 0),  # Green for low risk
             "medium": (0, 255, 255),  # Yellow for medium risk
@@ -51,6 +51,37 @@ def uploadFileRoute():
         for result in results:
             for box in result.boxes:
                 class_id = int(box.cls)
+                diagnosis = ""
+                match class_id:
+                    case 0:
+                        diagnosis = "Implant"
+                    case 1:
+                        diagnosis = "Prosthetic restoration"
+                    case 2:
+                        diagnosis = "Obturation"
+                    case 3:
+                        diagnosis = "Endodontic treatment"
+                    case 4:
+                        diagnosis = "Carious lesion"
+                    case 5:
+                        diagnosis = "Bone resorbtion"
+                    case 6:
+                        diagnosis = "Impacted tooth"
+                    case 7:
+                        diagnosis = "Apical periodontitis"
+                    case 8:
+                        diagnosis = "Root fragment"
+                    case 9:
+                        diagnosis = "Furcation lesion"
+                    case 10:
+                        diagnosis = "Apical surgery"
+                    case 11:
+                        diagnosis = "Root resorption"
+                    case 12:
+                        diagnosis = "Orthodontic device"
+                    case 13:
+                        diagnosis = "Surgical device"
+
                 x1, y1, x2, y2 = box.xyxy[0].tolist()  # Get coordinates
 
                 # Determine risk level based on class_id
@@ -66,7 +97,7 @@ def uploadFileRoute():
 
                 # Draw the bounding box and label on the image
                 cv2.rectangle(image, (int(x1), int(y1)), (int(x2), int(y2)), color, 2)
-                cv2.putText(image, f"Class {class_id}", (int(x1), int(y1) - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color,2)
+                cv2.putText(image, diagnosis, (int(x1), int(y1) - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color,2)
 
         output_file_path = os.path.join("output", "YOLO_" + os.path.basename(file_path))
         cv2.imwrite(output_file_path, image)
@@ -77,6 +108,21 @@ def uploadFileRoute():
 
 
         return jsonify({"message": "File uploaded successfully", "image": encoded_image}), 200
+
+@app.route('/history', methods=['GET'])
+def getHistory():
+    files = []
+    for filename in os.listdir("output"):
+        file_path = os.path.join("output", filename)
+        image = cv2.imread(file_path)
+        _, buffer = cv2.imencode('.jpg', image)
+        encoded_image = base64.b64encode(buffer).decode('utf-8')
+        files.append({"filename": filename, "image": encoded_image})
+
+    return jsonify({"files": files}), 200
+
+
+
 
 
 
